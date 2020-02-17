@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.catalogue.product.model.Category;
@@ -24,24 +25,24 @@ import com.example.exception.CustomException;
 import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 
 @RestController
+@RequestMapping("/product")
 public class ProductController {
-	
+
 	@Autowired
 	ProductService productService;
-	
+
 	@Autowired
 	CategoryService categoryService;
 
 	@GetMapping("/getProducts/{categoryName}")
 	public Iterable<Product> getProducts(@Valid @PathVariable String categoryName) throws CustomException {
 		try {
-			Category categoryDB=categoryService.getCategoryByName(categoryName);
-			if(categoryDB == null ) {
+			Category categoryDB = categoryService.getCategoryByName(categoryName);
+			if (categoryDB == null) {
 				throw new CustomException("Category doesnor exist", HttpStatus.BAD_REQUEST);
-			}else {
+			} else {
 				return categoryDB.getProducts();
 			}
-			
 
 		} catch (Exception e) {
 
@@ -49,11 +50,11 @@ public class ProductController {
 		}
 
 	}
-	
-	@GetMapping("/getProduct")
+
+	@GetMapping("/getProduct/{productName}")
 	public Product getProduct(String productName) throws CustomException {
 		try {
-			
+
 			return productService.getProduct(productName);
 
 		} catch (Exception e) {
@@ -63,29 +64,29 @@ public class ProductController {
 
 	}
 
-
 	@PutMapping("/updateProduct")
 	public SuccessMessage updateProduct(@Valid @RequestBody Product product) throws CustomException {
 		try {
-			
-			String message = productService.updateProduct(product);
-			
-			return new SuccessMessage(message, HttpStatus.OK);
-		} catch (Exception e) {
-			return new SuccessMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
-		}
 
-	}
-	
-	@PutMapping("/updateProducts/{id}")
-	public SuccessMessage updateProducts(@Valid @RequestBody Set<Product> products,@PathVariable Long id) throws CustomException {
-		try {
-			
-			String message = productService.updateProducts(products, id);
-			
+			String message = productService.updateProduct(product);
+
 			return new SuccessMessage(message, HttpStatus.OK);
-		} catch (Exception e) {
-			return new SuccessMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
+		} catch (CustomException e) {
+
+			throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PutMapping("/updateProducts")
+	public SuccessMessage updateProducts(@Valid @RequestBody Set<Product> products) throws CustomException {
+		try {
+
+			String message = productService.updateProducts(products);
+
+			return new SuccessMessage(message, HttpStatus.OK);
+		} catch (CustomException e) {
+
+			throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 
 	}
@@ -96,23 +97,23 @@ public class ProductController {
 			String message = productService.deleteProduct(id);
 			return new SuccessMessage(message, HttpStatus.OK);
 		} catch (Exception e) {
-			return new SuccessMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
+
+			throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 
 	}
-	
-	@PostMapping("/addProduct/{id}")
-	public SuccessMessage addProduct(@PathVariable Long id,@Valid @RequestBody Product product) throws CustomException {
+
+	@PostMapping("/addProduct/{categoryId}")
+	public SuccessMessage addProduct(@PathVariable Long categoryId, @Valid @RequestBody Product product)
+			throws CustomException {
 		try {
-			String message = productService.addProduct(id,product);
+			String message = productService.addProduct(categoryId, product);
 			return new SuccessMessage(message, HttpStatus.OK);
-		} catch (Exception e) {
-			return new SuccessMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
+		} catch (CustomException e) {
+
+			throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 
 	}
-
 
 }
-
-

@@ -25,7 +25,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		errors.setTimestamp(LocalDateTime.now());
 		errors.setError(ex.getMessage());
 		errors.setStatus(ex.getHttpStatus());
-
 		return new ResponseEntity<>(errors, ex.getHttpStatus());
 
 	}

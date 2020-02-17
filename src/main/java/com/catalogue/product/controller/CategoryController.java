@@ -42,9 +42,9 @@ public class CategoryController {
 		try {
 			String message = categoryService.addCategory(category);
 			return new SuccessMessage(message, HttpStatus.OK);
-		} catch (Exception e) {
+		} catch (CustomException e) {
 
-			return new SuccessMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
+			throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 
 	}
@@ -52,12 +52,13 @@ public class CategoryController {
 	@PutMapping("/updateCategory")
 	public SuccessMessage updateCategory(@Valid @RequestBody Category category) throws CustomException {
 		try {
-			
+
 			String message = categoryService.updateCategory(category);
-		
+
 			return new SuccessMessage(message, HttpStatus.OK);
-		} catch (Exception e) {
-			return new SuccessMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
+		} catch (CustomException e) {
+
+			throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 
 	}
@@ -67,8 +68,9 @@ public class CategoryController {
 		try {
 			String message = categoryService.deleteCategory(id);
 			return new SuccessMessage(message, HttpStatus.OK);
-		} catch (Exception e) {
-			return new SuccessMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
+		} catch (CustomException e) {
+
+			throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 
 	}

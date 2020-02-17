@@ -56,8 +56,8 @@ public class ProductService implements ProductManagement {
 			Product productdb = productRepository.findById(product.getProductId()).get();
 			
 			if(productdb == null) {
-				productRepository.save(product);
-				return "success";
+				
+				return null;
 			}else {
 				productdb.setProductDescription(product.getProductDescription());
 				productdb.setCurrencyType(product.getCurrencyType());
@@ -109,8 +109,8 @@ public class ProductService implements ProductManagement {
 	}
 
 	@Override
-	public String updateProducts(Set<Product> products, Long id) throws CustomException {
-		Product product;
+	public String updateProducts(Set<Product> products) throws CustomException {
+	
 		
 		
 			Iterator<Product> it = products.iterator();

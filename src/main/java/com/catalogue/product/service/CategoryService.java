@@ -27,9 +27,6 @@ public class CategoryService implements CategoryManagement {
 		Category categoryDB = categoryRepository.findByCatagoryName(category.getCatagoryName());
 
 		if (categoryDB == null) {
-			Set<Product> products = category.getProducts();
-
-			products.stream().forEach(x -> x.setCategory(category));
 
 			categoryRepository.save(category);
 			return "success";
@@ -55,7 +52,7 @@ public class CategoryService implements CategoryManagement {
 				categoryRepository.save(categorydb);
 				Set<Product> products = category.getProducts();
 				
-				return productService.updateProducts(products, category.getCategoryId());
+				return productService.updateProducts(products);
 				
 
 			}
